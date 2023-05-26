@@ -90,6 +90,10 @@ ENPOINTS
   "currentPage": 0
 }
 ```
+## Reference
+* https://docs.spring.io/spring-data/jpa/docs/2.6.7/reference/html/
+* https://docs.spring.io/spring-security/reference/
+* https://stackoverflow.com
 ## Screenshot
 
 
