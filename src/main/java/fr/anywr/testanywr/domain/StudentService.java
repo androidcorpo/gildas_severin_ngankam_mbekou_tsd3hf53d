@@ -8,5 +8,5 @@ import lombok.NonNull;
  * @author Severin Mbekou <mbekou99@gmail.com>
  */
 public interface StudentService {
-  PageDto getStudentList(@NonNull PageSettings pageSettings);
+  PageDto getStudentList(@NonNull PageSettings pageSettings, String classRoomName, String teacherFullName);
 }

@@ -19,12 +19,12 @@ public class StudentController {
   private final StudentService studentService;
 
   @GetMapping
-  PageDto getList(
+  PageDto getStudentListV1(
       @RequestParam(defaultValue = "0") int page,
-      @RequestParam(defaultValue = "3") int itemPerPage,
-      @RequestParam(required = false) String[] sorts) {
-    PageSettings settings = new PageSettings(page, itemPerPage, sorts);
-    return studentService.getStudentList(settings);
+      @RequestParam(defaultValue = "5") int itemPerPage,
+      @RequestParam(required = false) String teacherFullName,
+      @RequestParam(required = false) String classRoomName) {
+    PageSettings settings = new PageSettings(page, itemPerPage);
+    return studentService.getStudentList(settings, classRoomName, teacherFullName);
   }
-  
 }

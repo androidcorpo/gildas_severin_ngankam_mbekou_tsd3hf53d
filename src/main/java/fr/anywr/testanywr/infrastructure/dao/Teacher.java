@@ -20,7 +20,7 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "sc_teacher")
-public class Teacher extends BaseEntity{
+public class Teacher {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;

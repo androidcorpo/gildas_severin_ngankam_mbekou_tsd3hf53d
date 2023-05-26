@@ -26,7 +26,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "sc_class_room")
-public class ClassRoom extends BaseEntity {
+public class ClassRoom {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;

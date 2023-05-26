@@ -1,7 +1,8 @@
 package fr.anywr.testanywr.infrastructure.security;
 
+import static org.springframework.http.HttpMethod.POST;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -45,7 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .csrf()
         .disable()
         .authorizeRequests()
-        .antMatchers("/token")
+        .antMatchers(POST, "/token")
         .permitAll()
         .anyRequest()
         .authenticated()

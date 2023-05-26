@@ -14,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 /**
@@ -26,38 +25,46 @@ public class StudentServiceImpl implements StudentService {
   private final StudentRepository studentRepository;
 
   @Override
-  public PageDto getStudentList(@NonNull PageSettings pageSettings) {
-    List<Sort.Order> sort = pageSettings.buildSortOrder();
-    Pageable pageable =
-        PageRequest.of(pageSettings.getPage(), pageSettings.getItemPerPage(), Sort.by(sort));
+  public PageDto getStudentList(
+      @NonNull PageSettings pageSettings, String classRoomName, String teacherFullName) {
+    Pageable pageable = PageRequest.of(pageSettings.getPage(), pageSettings.getItemPerPage());
     Page<Student> students;
-    if (sort.isEmpty()) students = studentRepository.findAllCustomDefault(pageable);
-    else {
-      students = studentRepository.findAllCustom(pageable);
+    if (Objects.nonNull(classRoomName) && Objects.nonNull(teacherFullName)) {
+      students =
+          studentRepository.findStudentByClassRoomNameAndTeacherFullName(
+              classRoomName, teacherFullName, pageable);
+    } else if (Objects.nonNull(classRoomName)) {
+      students = studentRepository.findStudentByClassRoomName(classRoomName, pageable);
+    } else {
+      students = studentRepository.findAll(pageable);
     }
     return map(students);
   }
 
-
   private PageDto map(Page<Student> students) {
-
     List<StudentDto> collect =
         students.getContent().stream()
             .filter(Objects::nonNull)
-            .map(
-                student ->
-                    StudentDto.builder()
-                        .teacherLastName(student.getClassRoom().getTeacher().getLastName())
-                        .teacherFirstName(student.getClassRoom().getTeacher().getFirstName())
-                        .studentFirstName(student.getFirstName())
-                        .studentLastName(student.getLastName())
-                        .classRoomName(student.getClassRoom().getName())
-                        .build())
+            .map(this::buildStudentDto)
             .collect(Collectors.toList());
     return PageDto.builder()
         .item(collect)
         .size(students.getTotalElements())
         .pages(students.getTotalPages())
         .build();
+  }
+
+  private StudentDto buildStudentDto(Student student) {
+    StudentDto studentDto =
+        StudentDto.builder()
+            .studentFirstName(student.getFirstName())
+            .studentLastName(student.getLastName())
+            .classRoomName(student.getClassRoom().getName())
+            .build();
+    if (Objects.nonNull(student.getClassRoom().getTeacher())) {
+      studentDto.setTeacherLastName(student.getClassRoom().getTeacher().getLastName());
+      studentDto.setTeacherFirstName(student.getClassRoom().getTeacher().getFirstName());
+    }
+    return studentDto;
   }
 }

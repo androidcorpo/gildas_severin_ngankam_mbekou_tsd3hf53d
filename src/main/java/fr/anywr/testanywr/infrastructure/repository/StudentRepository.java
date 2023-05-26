@@ -12,10 +12,12 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Long> {
+  Page<Student> findAll(Pageable pageable);
+  @Query("select s from Student s join s.classRoom c where c.name =?1")
+  Page<Student> findStudentByClassRoomName(String classRoomName, Pageable pageable);
+
   @Query(
-      "select s from Student s join s.classRoom c join c.teacher t order by s.classRoom.name desc")
-  Page<Student> findAllCustom(Pageable pageable);
-  @Query(
-      "select s from Student s join s.classRoom c join c.teacher t")
-  Page<Student> findAllCustomDefault(Pageable pageable);
+      "select s from Student s join s.classRoom c join c.teacher t where c.name =?1 and (t.firstName like %?2% or t.lastName like %?2%)")
+  Page<Student> findStudentByClassRoomNameAndTeacherFullName(String classRoomName, String teacherFullName, Pageable pageable);
+
 }
