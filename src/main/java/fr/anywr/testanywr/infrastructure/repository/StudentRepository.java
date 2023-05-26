@@ -19,5 +19,4 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
   @Query(
       "select s from Student s join s.classRoom c join c.teacher t where c.name =?1 and (t.firstName like %?2% or t.lastName like %?2%)")
   Page<Student> findStudentByClassRoomNameAndTeacherFullName(String classRoomName, String teacherFullName, Pageable pageable);
-
 }
